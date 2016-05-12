@@ -29,7 +29,7 @@ Install NVIDIA cuDNN 4.0:
 Check out the TensorFlow 0.8.0, modified to work on Ubuntu 16.04 LTS
 and with older NVIDIA GPUs with compute capability 3.0:
 
-    $ git checkout --recursive git@git.frostbite.com/hholst/ea-tensorflow.git
+    $ git clone --recursive git@git.frostbite.com:/hholst/ea-tensorflow.git
 
 Install Google build tool Bazel (and JAVA JDK)
 
