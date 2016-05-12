@@ -101,10 +101,7 @@ function CheckAndLinkToSrcTree {
   # the same. This could happen if invoked from the source tree by accident.
   if [ ! $(readlink -f $PWD) == $(readlink -f $OUTPUTDIR/third_party/gpus/cuda) ]; then
     mkdir -p $(dirname $OUTPUTDIR/third_party/gpus/cuda/$FILE)
-    # EA: don't overwrite local changed files (ie., host_config.h)
-    if [ ! -f $OUTPUTDIR/third_party/gpus/cuda/$FILE -o -L $OUTPUTDIR/third_party/gpus/cuda/$FILE ]; then
-      ln -sf $PWD/$FILE $OUTPUTDIR/third_party/gpus/cuda/$FILE
-    fi
+    ln -sf $PWD/$FILE $OUTPUTDIR/third_party/gpus/cuda/$FILE
   fi
 }
 
