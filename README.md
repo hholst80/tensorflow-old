@@ -16,18 +16,25 @@ variety of other domains, as well.
 
 ## Building TensorFlow in Ubuntu 16.04 LTS
 
-Install NVIDIA CUDA packages from Universe repository:
+Install NVIDIA CUDA packages from multiverse repository:
 
-    $ sudo apt install nvidia-cuda-toolkit
+    $ sudo apt install nvidia-cuda-toolkit libcupti-dev
 
 Install NVIDIA cuDNN 4.0:
 
     $ sudo tar -C /usr/local -xzf /mnt/dl/mirror/cudnn-7.0-linux-x64-v4.0-prod.tgz
+    $ sudo cp /mnt/dl/etc/ld.so.conf.d/cuda.conf /etc/ld.so.conf.d/
+    $ sudo ldconfig
 
 Check out the TensorFlow 0.8.0, modified to work on Ubuntu 16.04 LTS
 and with older NVIDIA GPUs with compute capability 3.0:
 
-    $ git checkout git@git.frostbite.com/hholst/ea-tensorflow.git
+    $ git checkout --recursive git@git.frostbite.com/hholst/ea-tensorflow.git
+
+Install Google build tool Bazel (and JAVA JDK)
+
+    $ sudo apt install openjdk-8-jdk
+    $ bash /mnt/dl/mirror/bazel-0.2.2-installer-linux-x86_64.sh --user
 
 Create an Anaconda environment containing the build tools needed:
 ```
@@ -128,8 +135,7 @@ Python 3.5.1 |Continuum Analytics, Inc.| (default, Dec  7 2015, 11:16:01)
 Type "help", "copyright", "credits" or "license" for more information.
 >>> import tensorflow as tf
 I tensorflow/stream_executor/dso_loader.cc:105] successfully opened CUDA library libcublas.so locally
-I tensorflow/stream_executor/dso_loader.cc:99] Couldn't open CUDA library libcudnn.so. LD_LIBRARY_PATH: 
-I tensorflow/stream_executor/cuda/cuda_dnn.cc:1562] Unable to load cuDNN DSO
+I tensorflow/stream_executor/dso_loader.cc:105] successfully opened CUDA library libcudnn.so locally
 I tensorflow/stream_executor/dso_loader.cc:105] successfully opened CUDA library libcufft.so locally
 I tensorflow/stream_executor/dso_loader.cc:105] successfully opened CUDA library libcuda.so.1 locally
 I tensorflow/stream_executor/dso_loader.cc:105] successfully opened CUDA library libcurand.so locally
@@ -150,7 +156,7 @@ I tensorflow/core/common_runtime/gpu/gpu_device.cc:755] Creating TensorFlow devi
 >>> 
 ```
 
-##For more information
+## For more information
 
 * [TensorFlow website](http://tensorflow.org)
 * [TensorFlow whitepaper](http://download.tensorflow.org/paper/whitepaper2015.pdf)
