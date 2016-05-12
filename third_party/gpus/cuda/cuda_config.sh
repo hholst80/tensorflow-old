@@ -101,7 +101,10 @@ function CheckAndLinkToSrcTree {
   # the same. This could happen if invoked from the source tree by accident.
   if [ ! $(readlink -f $PWD) == $(readlink -f $OUTPUTDIR/third_party/gpus/cuda) ]; then
     mkdir -p $(dirname $OUTPUTDIR/third_party/gpus/cuda/$FILE)
-    ln -sf $PWD/$FILE $OUTPUTDIR/third_party/gpus/cuda/$FILE
+    # EA: don't overwrite local changed files (ie., host_config.h)
+    if [ ! -f $OUTPUTDIR/third_party/gpus/cuda/$FILE -o -L $OUTPUTDIR/third_party/gpus/cuda/$FILE ]; then
+      ln -sf $PWD/$FILE $OUTPUTDIR/third_party/gpus/cuda/$FILE
+    fi
   fi
 }
 
@@ -120,8 +123,8 @@ fi
 # Actually configure the source tree for TensorFlow's canonical view of Cuda
 # libraries.
 
-if test ! -e ${CUDA_TOOLKIT_PATH}/lib64/libcudart.so$TF_CUDA_VERSION; then
-  CudaError "cannot find ${CUDA_TOOLKIT_PATH}/lib64/libcudart.so$TF_CUDA_VERSION"
+if test ! -e ${CUDA_TOOLKIT_PATH}/lib/x86_64-linux-gnu/libcudart.so$TF_CUDA_VERSION; then
+  CudaError "cannot find ${CUDA_TOOLKIT_PATH}/lib/x86_64-linux-gnu/libcudart.so$TF_CUDA_VERSION"
 fi
 
 if test ! -d ${CUDNN_INSTALL_PATH}; then
@@ -175,12 +178,12 @@ function LinkAllFiles {
 mkdir -p $OUTPUTDIR/third_party/gpus/cuda
 echo "Setting up Cuda include"
 LinkAllFiles ${CUDA_TOOLKIT_PATH}/include $OUTPUTDIR/third_party/gpus/cuda/include || exit -1
-echo "Setting up Cuda lib64"
-LinkAllFiles ${CUDA_TOOLKIT_PATH}/lib64 $OUTPUTDIR/third_party/gpus/cuda/lib64 || exit -1
+echo "Setting up Cuda lib"
+LinkAllFiles ${CUDA_TOOLKIT_PATH}/lib/x86_64-linux-gnu $OUTPUTDIR/third_party/gpus/cuda/lib64 || exit -1
 echo "Setting up Cuda bin"
 LinkAllFiles ${CUDA_TOOLKIT_PATH}/bin $OUTPUTDIR/third_party/gpus/cuda/bin || exit -1
-echo "Setting up Cuda nvvm"
-LinkAllFiles ${CUDA_TOOLKIT_PATH}/nvvm $OUTPUTDIR/third_party/gpus/cuda/nvvm || exit -1
+#echo "Setting up Cuda nvvm"
+#LinkAllFiles ${CUDA_TOOLKIT_PATH}/nvvm $OUTPUTDIR/third_party/gpus/cuda/nvvm || exit -1
 
 # Set up symbolic link for cudnn
 ln -sf $CUDNN_HEADER_PATH/cudnn.h $OUTPUTDIR/third_party/gpus/cuda/include/cudnn.h || exit -1

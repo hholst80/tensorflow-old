@@ -50,6 +50,9 @@ toolchain {
   # Use "-std=c++11" for nvcc. For consistency, force both the host compiler
   # and the device compiler to use "-std=c++11".
   cxx_flag: "-std=c++11"
+  # EA: gcc 5.3 tweaks.
+  cxx_flag: "-D_MWAITXINTRIN_H_INCLUDED"
+  cxx_flag: "-D_FORCE_INLINES=1"
   linker_flag: "-lstdc++"
   linker_flag: "-B/usr/bin/"
 
@@ -105,6 +108,10 @@ toolchain {
   compiler_flag: "-Wunused-but-set-parameter"
   # But disable some that are problematic.
   compiler_flag: "-Wno-free-nonheap-object" # has false positives
+  # EA: Disable some pedantic warnings.
+  compiler_flag: "-Wno-unused-function"
+  compiler_flag: "-Wno-unused-local-typedefs"
+  compiler_flag: "-Wno-unused-variable"
 
   # Keep stack frames for debugging, even in opt mode.
   compiler_flag: "-fno-omit-frame-pointer"

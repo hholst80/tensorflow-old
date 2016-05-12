@@ -40,11 +40,11 @@ echo "$SWIG_PATH" > tensorflow/tools/swig/swig_path
 ## Set up Cuda-related environment settings
 
 while [ "$TF_NEED_CUDA" == "" ]; do
-  read -p "Do you wish to build TensorFlow with GPU support? [y/N] " INPUT
+  read -p "Do you wish to build TensorFlow with GPU support? [Y/n] " INPUT
   case $INPUT in
     [Yy]* ) echo "GPU support will be enabled for TensorFlow"; TF_NEED_CUDA=1;;
     [Nn]* ) echo "No GPU support will be enabled for TensorFlow"; TF_NEED_CUDA=0;;
-    "" ) echo "No GPU support will be enabled for TensorFlow"; TF_NEED_CUDA=0;;
+    "" ) echo "GPU support will be enabled for TensorFlow"; TF_NEED_CUDA=1;;
     * ) echo "Invalid selection: " $INPUT;;
   esac
 done
@@ -86,7 +86,7 @@ while true; do
 
   fromuser=""
   if [ -z "$CUDA_TOOLKIT_PATH" ]; then
-    default_cuda_path=/usr/local/cuda
+    default_cuda_path=/usr
     read -p "Please specify the location where CUDA $TF_CUDA_VERSION toolkit is installed. Refer to README.md for more details. [Default is $default_cuda_path]: " CUDA_TOOLKIT_PATH
     fromuser="1"
     if [ -z "$CUDA_TOOLKIT_PATH" ]; then
@@ -98,10 +98,10 @@ while true; do
   else
     TF_CUDA_EXT=".$TF_CUDA_VERSION"
   fi
-  if [ -e $CUDA_TOOLKIT_PATH/lib64/libcudart.so$TF_CUDA_EXT ]; then
+  if [ -e $CUDA_TOOLKIT_PATH/lib/x86_64-linux-gnu/libcudart.so$TF_CUDA_EXT ]; then
     break
   fi
-  echo "Invalid path to CUDA $TF_CUDA_VERSION toolkit. $CUDA_TOOLKIT_PATH/lib64/libcudart.so$TF_CUDA_EXT cannot be found"
+  echo "Invalid path to CUDA $TF_CUDA_VERSION toolkit. $CUDA_TOOLKIT_PATH/x86_64-linux-gnu/libcudart.so$TF_CUDA_EXT cannot be found"
   if [ -z "$fromuser" ]; then
     exit 1
   fi
@@ -119,7 +119,7 @@ while true; do
 
   fromuser=""
   if [ -z "$CUDNN_INSTALL_PATH" ]; then
-    default_cudnn_path=${CUDA_TOOLKIT_PATH}
+    default_cudnn_path=/usr/local/cuda
     read -p "Please specify the location where cuDNN $TF_CUDNN_VERSION library is installed. Refer to README.md for more details. [Default is $default_cudnn_path]: " CUDNN_INSTALL_PATH
     fromuser="1"
     if [ -z "$CUDNN_INSTALL_PATH" ]; then
