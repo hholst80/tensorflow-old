@@ -18,7 +18,7 @@ variety of other domains, as well.
 
 Install NVIDIA CUDA packages from multiverse repository:
 
-    $ sudo apt install nvidia-cuda-toolkit libcupti-dev
+    $ sudo apt install build-essential nvidia-cuda-toolkit libcupti-dev zlib1g-dev
 
 Install NVIDIA cuDNN 4.0:
 
@@ -79,7 +79,9 @@ You also need to activate the new Anaconda environment:
 
     $ source activate ea-tensorflow
 
-*Optional:* You can re-run the `./configure` script.
+### Configure TensorFlow
+
+You need to run the `./configure` script.
 Observe that we override the compute capability
 to include support for CUDA compute capability 3.0!
 
@@ -105,17 +107,21 @@ find: File system loop detected; ‘/usr/bin/X11’ is part of the same file sys
 Configuration finished
 ```
 
-### Compiling
+### Build tests and pip package
 
-Build TensorFlow
+Build TensorFlow benchmark tests:
 
-    $ bazel build -c opt --config=cuda //tensorflow/cc:tutorials_example_trainer
+    $ bazel build --config=cuda -c opt --test_tag_filters=local,-benchmark-test //tensorflow/...
 
-Run test
+Run benchmark tests:
 
-    $ bazel-bin/tensorflow/cc/tutorials_example_trainer --use_gpu
+    $ bazel test --config=cuda -c opt --jobs=1 --test_tag_filters=local,-benchmark-test //tensorflow/...
 
-Build pip package
+Compile pip package:
+
+    $ bazel build -c opt --config=cuda //tensorflow/tools/pip_package:build_pip_pack
+
+Build pip package:
 
     $ bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
 
