@@ -119,11 +119,11 @@ Run benchmark tests:
 
 Compile pip package:
 
-    $ bazel build -c opt --config=cuda //tensorflow/tools/pip_package:build_pip_pack
+    $ bazel build --config=cuda -c opt //tensorflow/tools/pip_package:build_pip_package
 
 Build pip package:
 
-    $ bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+    $ ./tensorflow/tools/pip_package/build_pip_package.sh /tmp/tensorflow_pkg
 
 Install pip package:
 
